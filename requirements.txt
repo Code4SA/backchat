@@ -1,7 +1,8 @@
 dj-database-url==0.3.0
 Django==1.9.2
+django-cors-headers==1.1.0
 django-extensions==1.6.1
-django-pipeline==1.5.1
+django-pipeline==1.6.5
 enum34==1.0.4
 futures==3.0.2
 gevent==1.0.1

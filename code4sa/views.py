@@ -1,7 +1,8 @@
 import json
 
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponse
 
 from code4sa.models import Submission
 
@@ -10,6 +11,7 @@ def home(request):
     return render(request, 'index.html')
 
 
+@csrf_exempt
 def submit(request, project):
     """ Make a new submission for a project.
     """
@@ -23,17 +25,16 @@ def submit(request, project):
             return HttpResponseBadRequest('Invalid "data" value, it must be JSON.')
 
     if 'HTTP_X_FORWARDED_FOR' in request.META:
-        client_ip = request.META.get('HTTP_X_FORWARDED_FOR', '')
+        remote_ip = request.META.get('HTTP_X_FORWARDED_FOR', '')
     else:
-        client_ip = request.META.get('REMOTE_ADDR', '')
+        remote_ip = request.META.get('REMOTE_ADDR', '')
 
     details = {
         'project': project,
-        'remote_ip': client_ip,
+        'remote_ip': remote_ip,
         'data': data,
+        'user_agent': request.META.get('HTTP_USER_AGENT')
     }
 
-    print details
-
-    sub = Submission(**details)
-    sub.save()
+    Submission(**details).save()
+    return HttpResponse('ok')

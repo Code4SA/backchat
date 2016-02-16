@@ -41,12 +41,14 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'pipeline',
     'django_extensions',
+    'corsheaders',
 
     'code4sa',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -84,6 +86,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 # Templates
 TEMPLATE_DEBUG = DEBUG
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -114,7 +118,6 @@ STATIC_URL = '/static/'
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "pipeline.finders.PipelineFinder",
 )
 
 PYSCSS_LOAD_PATHS = [
@@ -122,30 +125,29 @@ PYSCSS_LOAD_PATHS = [
     os.path.join(BASE_DIR, 'code4sa', 'static', 'bower_components'),
 ]
 
-PIPELINE_CSS = {
-    'css': {
-        'source_filenames': (
-            'bower_components/fontawesome/css/font-awesome.css',
-            'stylesheets/app.scss',
-        ),
-        'output_filename': 'app.css',
+PIPELINE = {
+    'COMPILERS': ('code4sa.pipeline.PyScssCompiler',),
+    'STYLESHEETS': {
+        'css': {
+            'source_filenames': (
+                'bower_components/fontawesome/css/font-awesome.css',
+                'stylesheets/app.scss',
+            ),
+            'output_filename': 'app.css',
+        },
     },
-}
-PIPELINE_JS = {
-    'js': {
-        'source_filenames': (
-            'bower_components/jquery/dist/jquery.min.js',
-            'javascript/app.js',
-        ),
-        'output_filename': 'app.js',
+    'JAVASCRIPT': {
+        'js': {
+            'source_filenames': (
+                'bower_components/jquery/dist/jquery.min.js',
+                'javascript/app.js',
+            ),
+            'output_filename': 'app.js',
+        },
     },
+    'PIPELINE_CSS_COMPRESSOR': None,
+    'PIPELINE_JS_COMPRESSOR': None,
 }
-PIPELINE_CSS_COMPRESSOR = None
-PIPELINE_JS_COMPRESSOR = None
-
-PIPELINE_COMPILERS = (
-    'code4sa.pipeline.PyScssCompiler',
-)
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
