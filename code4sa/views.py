@@ -38,3 +38,21 @@ def submit(request, project):
 
     Submission(**details).save()
     return HttpResponse('ok')
+
+
+@csrf_exempt
+def budget2016_notice(request):
+    """ Send a response email after a budget 2016 submission.
+    """
+    if request.method != 'POST':
+        return HttpResponseBadRequest("POST only, I'm afraid.")
+
+    if request.POST.get('data'):
+        try:
+            data = json.loads(request.POST.get('data'))
+        except ValueError:
+            return HttpResponseBadRequest('Invalid "data" value, it must be JSON.')
+
+    # TODO: send email
+
+    return HttpResponse('ok')
