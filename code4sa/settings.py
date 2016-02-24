@@ -88,6 +88,14 @@ USE_TZ = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+EMAIL_HOST = 'smtp.mandrillapp.com'
+EMAIL_HOST_USER = 'webapps@code4sa.org'
+EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+
+# use this to stop sending emails
+SEND_EMAILS = os.environ.get('DJANGO_SEND_EMAILS') == 'True'
+
 # Templates
 TEMPLATE_DEBUG = DEBUG
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -175,10 +183,9 @@ LOGGING = {
         'level': 'ERROR'
     },
     'loggers': {
-        # put any custom loggers here
-        # 'your_package_name': {
-        #    'level': 'DEBUG' if DEBUG else 'INFO',
-        # },
+        'code4sa': {
+            'level': 'DEBUG' if DEBUG else 'INFO',
+        },
         'django': {
             'level': 'DEBUG' if DEBUG else 'INFO',
         }
