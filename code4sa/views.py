@@ -79,6 +79,7 @@ def budget2016_notice(request):
         message = html2text(html)
 
         # do it
+        log.info("Sending email to %s from %s" % (recipient, from_email))
         send_mail(subject, message, from_email, [recipient], html_message=html)
     else:
         log.warn("Ignoring submission, it looks bad: %s" % data)
