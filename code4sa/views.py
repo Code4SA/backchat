@@ -73,14 +73,15 @@ def budget2016_notice(request):
             and 'ranked the biggest increases' in html
             and 'Thank you for considering my submission' in html):
 
-        recipient = "greg@code4sa.org"  # if settings.DEBUG else "daarends@parliament.gov.za"
+        recipient = "greg@code4sa.org" if settings.DEBUG else "daarends@parliament.gov.za"
         subject = "Public Feedback on the 2016 Budget"
         # plain text version
         message = html2text(html)
 
         # do it
-        log.info("Sending email to %s from %s" % (recipient, from_email))
-        send_mail(subject, message, from_email, [recipient], html_message=html)
+        if settings.SEND_EMAILS:
+            log.info("Sending email to %s from %s" % (recipient, from_email))
+            send_mail(subject, message, from_email, [recipient], html_message=html)
     else:
         log.warn("Ignoring submission, it looks bad: %s" % data)
 
