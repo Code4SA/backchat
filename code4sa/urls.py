@@ -8,5 +8,7 @@ urlpatterns = patterns('',
     url(r'^submit/budget2016/$', 'code4sa.views.submit', kwargs={'project': 'budget2016'}),
     url(r'^submit/budget2016/notice$', 'code4sa.views.budget2016_notice'),
 
+    url(r'^portalproxy/resource/5erp-fahs\.[a-z]+$', 'code4sa.views.portalproxy'),
+
     url(r'^admin/', include(admin.site.urls)),
 )
