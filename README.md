@@ -29,6 +29,7 @@ Set the following config variables:
     NEW_RELIC_APP_NAME=Backchat
     NEW_RELIC_LICENSE_KEY=...
 
+On an old dokku, copy the tols folder with the wildcard cert into the app folder and rebuild to configure TLS.
 
 License
 -------
