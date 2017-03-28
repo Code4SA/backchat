@@ -73,6 +73,9 @@ DATABASES = {
     'default': db_config,
 }
 
+PORTAL_CREDS = os.environ.get('PORTAL_CREDS')
+PORTAL_APP_TOKEN = os.environ.get('PORTAL_APP_TOKEN')
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 

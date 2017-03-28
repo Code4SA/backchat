@@ -1,6 +1,7 @@
 import json
 import re
 import logging
+import requests
 
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
@@ -86,3 +87,25 @@ def budget2016_notice(request):
         log.warn("Ignoring submission, it looks bad: %s" % data)
 
     return HttpResponse('ok')
+
+
+@csrf_exempt
+def portalproxy(request):
+    path = request.path.replace('/portalproxy/', '')
+    url = 'https://data.code4sa.org/%s' % path
+    params = dict(request.GET)
+    headers = {'X-App-Token': settings.PORTAL_APP_TOKEN}
+    log.info("Requesting %s %r" % (url, params))
+    creds = tuple(settings.PORTAL_CREDS.split(':'))
+    r = requests.get(url, params=params, auth=creds, headers=headers, timeout=30)
+    r.raise_for_status()
+    log.info("Response success for %s %r" % (url, params))
+    log.debug("Response Body: %r" % r.text)
+    response = HttpResponse(r.text, content_type=r.headers['content-type'])
+    if path.endswith('.csv'):
+        suffix = ''
+        for key, value in params.iteritems():
+            suffix += '-%s_%s' % (key, value)
+        filename = re.sub('[^\w]+', '-', path + suffix) + '.csv'
+        response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+    return response
