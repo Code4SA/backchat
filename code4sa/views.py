@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils.cache import patch_cache_control
 
 from code4sa.models import Submission
 from code4sa.html2text import html2text
@@ -98,10 +99,12 @@ def portalproxy(request):
     log.info("Requesting %s %r" % (url, params))
     creds = tuple(settings.PORTAL_CREDS.split(':'))
     r = requests.get(url, params=params, auth=creds, headers=headers, timeout=30)
+
     r.raise_for_status()
     log.info("Response success for %s %r" % (url, params))
     log.debug("Response Body: %r" % r.text)
     response = HttpResponse(r.text, content_type=r.headers['content-type'])
+    patch_cache_control(response, max_age=1*24*60*60)
     if path.endswith('.csv'):
         suffix = ''
         for key, value in params.iteritems():
